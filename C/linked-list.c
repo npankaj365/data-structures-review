@@ -6,6 +6,8 @@ typedef struct node {
     struct node *next;
 } node;
 
+node *head = NULL;
+node *curr = NULL;
 
 node* create_list(int n)
 {
@@ -25,18 +27,28 @@ node* append_list(node *head, int n)
     return new_node;
 }
 
-void delete_item(node *ptr, int n)
+int delete_item(node *ptr, int n)
 {
-    while(ptr != NULL)
+    int found = 0;
+    if(head->data == n)
     {
-        if(ptr->next->data == n)
-        {
-            printf("Deleting %d\n", n);
-            ptr->next = ptr->next->next;
-            break;
-        }
-        ptr = ptr->next;
+        head = head->next;
+        found = 1;
     }
+    else
+    {
+        while(ptr != NULL)
+        {
+            if(ptr->next->data == n)
+            {
+                found = 1;
+                ptr->next = ptr->next->next;
+                break;
+            }
+            ptr = ptr->next;
+        }
+    }
+    return found;
 }
 
 void traverse_list(node *ptr)
@@ -50,20 +62,24 @@ void traverse_list(node *ptr)
 
 int main(void)
 {
-    node *list = create_list(4);
-    node *head = list;
+    head = create_list(4);
+    curr = head;
 
     // Inserting items into the Linked List
-    list = append_list(list, 5);
-    list = append_list(list, 6);
-    list = append_list(list, 7);
+    curr = append_list(curr, 5);
+    curr = append_list(curr, 6);
+    curr = append_list(curr, 7);
 
     // Printing items from the Linked List
     traverse_list(head);
 
-    // Deleting item
-    delete_item(head, 5);
+    // Deleting items
+    if(delete_item(head, 7)){
+        printf("Delete of %d successful\n", 7);
+    }
     traverse_list(head);
-    delete_item(head, 6);
+    if(delete_item(head, 6)){
+        printf("Delete of %d successful\n", 6);
+    }
     traverse_list(head);
 }
